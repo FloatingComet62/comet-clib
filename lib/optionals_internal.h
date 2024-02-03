@@ -5,7 +5,8 @@
 
 typedef struct {
   bool has_data;
+  u8 size_of_data;
   void* data;
-} tOptional;
+} intOptional;
 
 #endif

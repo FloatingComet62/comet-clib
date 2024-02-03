@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "lib.h": "c",
-        "string_internal.h": "c"
-    }
+        "string_internal.h": "c",
+        "cstdlib": "c"
+    },
+    "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\gcc.exe"
 }

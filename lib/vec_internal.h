@@ -8,6 +8,6 @@ typedef struct {
   u16 size; /* allocated size */
   u8 stride;
   void* data;
-} tVec;
+} intVec;
 
 #endif

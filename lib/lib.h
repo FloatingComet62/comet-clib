@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>  // WHY THE FUCK IS memcpy() IN STRING.H?????
 
 // -----Configuration--------------------------
 #ifndef DEBUG
@@ -33,11 +34,13 @@ typedef int64_t i64;
 
 typedef void tOptional;
 
-tOptional* tOptional_create(void* data);
+tOptional* tOptional_create(void* data, u8 size_of_data);
+tOptional* tOptional_create_clone(void* data, u8 size_of_data);
+tOptional* tOptional_create_none();
 void tOptional_free(tOptional* this);
 
-tOptional* tOptional_is_some(tOptional* this);
-tOptional* tOptional_is_none(tOptional* this);
+bool tOptional_is_some(tOptional* this);
+bool tOptional_is_none(tOptional* this);
 void* tOptional_unwrap(tOptional* this);
 void* tOptional_unwrapF(tOptional* this);
 
@@ -81,9 +84,7 @@ char* tString_chars(tString* this);
 
 void tStringMUT_concat_cstr(tString** this_mut, char* c_str);
 void tStringMUT_concat(tString** this_mut, tString* str);
-void tStringMUT_concatF(
-    tString** this_mut,
-    tString* str); /* Concats the string and frees the second string */
+void tStringMUT_concatF(tString** this_mut, tString* str);
 tOptional* tString_find_char(tString* this, char char_to_find);
 tVec* tString_find_chars(tString* this, char char_to_find);
 
