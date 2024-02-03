@@ -7,8 +7,13 @@
 #include <stdlib.h>
 
 // -----Configuration--------------------------
+#ifndef DEBUG
 #define DEBUG 1
+#endif
+
+#ifndef COMET_LIB_CURRENT_LOG_LEVEL
 #define COMET_LIB_CURRENT_LOG_LEVEL CLLL_INFO
+#endif
 // --------------------------------------------
 
 // improved the naming by a factor of 10^64
