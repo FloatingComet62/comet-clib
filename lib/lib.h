@@ -42,7 +42,9 @@ void tOptional_free(tOptional* this);
 bool tOptional_is_some(tOptional* this);
 bool tOptional_is_none(tOptional* this);
 void* tOptional_unwrap(tOptional* this);
-void* tOptional_unwrapF(tOptional* this);
+void* tOptional_unwrap_clone(tOptional* this);
+void* tOptional_unwrapF(tOptional* this);  // returns a clone of the data
+void* tOptional_unwrap_cloneF(tOptional* this);
 
 // -----Iterators------------------------------
 

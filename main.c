@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
   {
     s thing;
     thing.she_a_u128 = 33;
+
     optional = tOptional_create_clone((void*)&thing, sizeof thing);
     thing.she_a_u128 = 34;
   }
