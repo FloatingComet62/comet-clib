@@ -22,10 +22,16 @@ int main(int argc, char** argv) {
     thing.she_a_u128 = 33;
 
     optional = tOptional_create_clone((void*)&thing, sizeof thing);
+    // optional = tOptional_create_none();
     thing.she_a_u128 = 34;
-  }
+  }  // thing no longer exists, but optional does need to contain something...
 
-  printf("%d\n", ((s*)tOptional_unwrapF(optional))->she_a_u128);  // 33
+  s* data = (s*)tOptional_unwrap_clone(optional);
+  // s* data = (s*)tOptional_unwrap(optional);
+  data->she_a_u128 = 35;
+  s* new_data = (s*)tOptional_unwrap(optional);  // 33
+  printf("%d\n", new_data->she_a_u128);
+  tOptional_free(optional);
 
   info("Exiting");
   return 0;

@@ -46,7 +46,12 @@ void* tOptional_unwrap(tOptional* fake) {
   }
   return this->data;
 }
-void* tOptional_unwrap_clone(tOptional* this) {}
+void* tOptional_unwrap_clone(tOptional* fake) {
+  intOptional* this = (intOptional*)fake;
+  void* data = malloc(this->size_of_data);
+  memcpy(data, this->data, this->size_of_data);
+  return data;
+}
 void* tOptional_unwrapF(tOptional* fake) {
   intOptional* this = (intOptional*)fake;
   if (!this->has_data) {
