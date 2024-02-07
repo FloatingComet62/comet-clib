@@ -45,41 +45,32 @@ bool tOptional_is_some(tOptional* this);
 bool tOptional_is_none(tOptional* this);
 void* tOptional_unwrap(tOptional* this);
 void* tOptional_unwrap_clone(tOptional* this);
-void* tOptional_unwrapF(tOptional* this);  // returns a clone of the data
+void* tOptional_unwrapF(tOptional* this);
 void* tOptional_unwrap_cloneF(tOptional* this);
-
-// -----Iterators------------------------------
-
-typedef void tIterator;
-
-tIterator* tIterator_create(u16 stride);
-void tIterator_free(tIterator* this);
-
-void tIteratorMUT_feed(tIterator** this_mut, void* data);
-void* tIteratorMUT_get(
-    tIterator** this_mut); /* congrats! it's your responsibility */
 
 // -----Vectors--------------------------------
 
 typedef void tVec;
 
 tVec* tVec_create(u8 stride);
+tVec* tVec_reserve(u8 stride, u16 length);
 void tVec_free(tVec* this);
 
 u16 tVec_length(tVec* this);
 
-void tVec_reserve(tVec* this, u8 stride, u16 length);
-void tVecMUT_resize(tVec** this_mut, u16 length);
+void tVecMUT_resize(tVec** this_mut, u16 new_size);
 void* tVec_at(tVec* this, u16 index);
+void* tVec_at_clone(tVec* this, u16 index);
 void tVecMUT_push(tVec** this_mut, void* data);
 void* tVecMUT_pop(tVec** this_mut);
-tIterator* tVec_iterate(tVec* this);
+void tVecMUT_append(tVec** this_mut, tVec* other);
 
 // -----String---------------------------------
 
 typedef void tString;
 
 tString* tString_create();
+tString* tString_reserve(u16 length);
 tString* tString_create_str(char* c_str);
 void tString_free(tString* this);
 
@@ -89,6 +80,7 @@ char* tString_chars(tString* this);
 void tStringMUT_concat_cstr(tString** this_mut, char* c_str);
 void tStringMUT_concat(tString** this_mut, tString* str);
 void tStringMUT_concatF(tString** this_mut, tString* str);
+char tString_at(tString* this, u8 index);
 tOptional* tString_find_char(tString* this, char char_to_find);
 tVec* tString_find_chars(tString* this, char char_to_find);
 

@@ -31,6 +31,8 @@ int main(int argc, char** argv) {
   data->she_a_u128 = 35;
   s* new_data = (s*)tOptional_unwrap(optional);  // 33
   printf("%d\n", new_data->she_a_u128);
+
+  free(data);
   tOptional_free(optional);
 
   info("Exiting");

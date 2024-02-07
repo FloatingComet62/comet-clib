@@ -8,6 +8,7 @@ list(APPEND sources
   ${CMAKE_CURRENT_LIST_DIR}/string.c
   ${CMAKE_CURRENT_LIST_DIR}/log.c
   ${CMAKE_CURRENT_LIST_DIR}/optionals.c
+  ${CMAKE_CURRENT_LIST_DIR}/vec.c
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
