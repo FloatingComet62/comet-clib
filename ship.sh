@@ -21,7 +21,7 @@ if [[ $1 = "run" ]]; then
 	else
 		echo "Building Debug build"
 		echo "Building..."
-		gcc lib/*.c main.c -o build/debug.exe
+		gcc lib/*.c main.c -DCOMET_LIB_DEBUG=1 -o build/debug.exe
 		echo "Running..."
 		echo
 		./build/debug.exe
@@ -34,7 +34,7 @@ elif [[ $1 = "build" ]]; then
 		gcc lib/*.c main.c -w -Os -o build/release.exe
 	else
 		echo "Building Debug build"
-		gcc lib/*.c main.c -w -o build/debug.exe
+		gcc lib/*.c main.c -DCOMET_LIB_DEBUG=1 -o build/debug.exe
 	fi
 elif [[ $1 = "clean" ]]; then
 	echo "Cleaning Builds"

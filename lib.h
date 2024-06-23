@@ -10,7 +10,6 @@
 // ----------------------------------------------
 // Configuration
 
-#define COMET_LIB_DEBUG 1
 #define COMET_LIB_LOG_LEVEL CLLL_INFO
 #define COMET_LIB_VEC_INITIAL_CAPACITY 4
 #define COMET_LIB_VEC_MAX_INCREMENT 32
