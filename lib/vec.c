@@ -1,5 +1,9 @@
 #include "../lib.h"
 
+u32 increase_capacity(const u32 old_capacity) {
+	return old_capacity * 2;
+}
+
 vec vec_init(const u32 stride) {
 	void* data = malloc(COMET_LIB_VEC_INITIAL_CAPACITY * stride);
 	if (data == NULL) {
@@ -37,14 +41,14 @@ void vecMUT_reserve(vec* self, const u32 capacity) {
 
 void vecMUT_push(vec* self, const void* data) {
 	if (self->length + 1 > self->capacity) {
-		vecMUT_reserve(self, 2 * self->capacity);
+		vecMUT_reserve(self, increase_capacity(self->capacity));
 	}
 	vecMUT_push_assume_capacity(self, data);
 }
 
 void vecMUT_push_value(vec* self, const void* data) {
 	if (self->length + 1 > self->capacity) {
-		vecMUT_reserve(self, 2 * self->capacity);
+		vecMUT_reserve(self, increase_capacity(self->capacity));
 	}
 	vecMUT_push_value_assume_capacity(self, data);
 }
@@ -75,5 +79,6 @@ void vecMUT_remove_at(vec* self, const u32 index) {
 		self->head + (index + 1) * self->stride,
 		(self->length - index) * self->stride
 	);
+	self->length--;
 }
 

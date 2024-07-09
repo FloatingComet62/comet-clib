@@ -31,6 +31,7 @@ typedef int64_t i64;
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
+#define clamp(num, min, max) min(max(num, min), max)
 
 // ----------------------------------------------
 // Optional
@@ -51,18 +52,21 @@ typedef struct {
 	u32 capacity;
 } str;
 
+u32 cstr_len(const char* str);
+
 str      str_init(const char* data);
 str      str_init_reserve(const u32 capacity);
 void     str_deinit(const str self);
 str      str_concat(const str str1, const str str2);
 str      str_concat_cstr(const str str1, const char* str2);
+optional str_at(const str self, const u32 index);
+optional str_find(const str self, const char character);
+void     strMUT_reserve(str* self, const u32 capacity);
 void     strMUT_concat(str* str1, const str str2);
 void     strMUT_concat_cstr(str* str1, const char* str2);
 void     strMUT_remove_at(str* self, const u32 index);
 void     strMUT_concat_assume_capacity(str* str1, const str str2);
 void     strMUT_concat_cstr_assume_capacity(str* str1, const char* str2);
-optional str_at(const str self, const u32 index);
-optional str_find(const str self, const char character);
 
 // ----------------------------------------------
 // Vec

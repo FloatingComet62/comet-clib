@@ -36,6 +36,23 @@ elif [[ $1 = "build" ]]; then
 		echo "Building Debug build"
 		gcc lib/*.c main.c -DCOMET_LIB_DEBUG=1 -o build/debug.exe
 	fi
+elif [[ $1 = "test" ]]; then
+	echo "Testing Code"
+	if [[ $2 = "release" ]]; then
+		echo "Building Release build"
+		echo "Building..."
+		gcc tests/*.c lib/*.c main.c -DCOMET_LIB_TEST=1 -w -Os -o build/test_release.exe
+		echo "Testing..."
+		echo
+		./build/test_release.exe
+	else
+		echo "Building Debug build"
+		echo "Building..."
+		gcc tests/*.c lib/*.c main.c -DCOMET_LIB_TEST=1 -DCOMET_LIB_DEBUG=1 -o build/test_debug.exe
+		echo "Testing..."
+		echo
+		./build/test_debug.exe
+	fi
 elif [[ $1 = "clean" ]]; then
 	echo "Cleaning Builds"
 	# https://stackoverflow.com/questions/4846007/check-if-directory-exists-and-delete-in-one-command
@@ -43,4 +60,3 @@ elif [[ $1 = "clean" ]]; then
 		rm build --recursive
 	fi
 fi
-
