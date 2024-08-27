@@ -2,7 +2,7 @@
 
 #ifdef COMET_LIB_TEST
 #include "test.h"
-#else 
+#else
 
 int main() {
 	str s = str_init("Hello World");

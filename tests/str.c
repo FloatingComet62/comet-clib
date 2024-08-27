@@ -33,7 +33,7 @@ struct malloc_size_response malloc_size(const void *p) {
 bool test_str_init() {
 	str s = str_init("Hello World");
 	assert(strcmp(s.data, "Hello World") == 0, "String doesn't contain correct data");
-	assert(s.length == 14, "String length is incorrectly assigned");
+	assert(s.length == 11, "String length is incorrectly assigned");
 	str_deinit(s);
 	return true;
 }
@@ -43,7 +43,8 @@ bool test_str_init_reserve() {
 	assert(s.capacity == 100, "Incorrect capacity assigned");
 	struct malloc_size_response msize = malloc_size(s.data);
 	if (msize.exists) {
-		assert(msize.size == 100 * sizeof(char), "Incorrect malloc size allocated");
+		// it's fine if it's a little over allocated, linux does that
+		assert(msize.size >= 100 * sizeof(char), "Incorrect malloc size allocated");
 	}
 	str_deinit(s);
 	return true;
