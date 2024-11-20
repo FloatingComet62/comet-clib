@@ -28,6 +28,8 @@ typedef int16_t i16;
 typedef int32_t i32;
 typedef int64_t i64;
 // typedef __int128_t i128;
+typedef float f32;
+typedef double f64;
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
@@ -46,6 +48,7 @@ optional optional_init_none();
 
 // ----------------------------------------------
 // String
+
 typedef struct {
 	char* data;
 	u32 length;
@@ -70,6 +73,7 @@ void     strMUT_concat_cstr_assume_capacity(str* str1, const char* str2);
 
 // ----------------------------------------------
 // Vec
+
 typedef struct {
 	void* head;
 	u32 stride;
@@ -80,7 +84,7 @@ typedef struct {
 vec      vec_init(const u32 stride);
 vec      vec_init_reserve(const u32 stride, const u32 capacity);
 void     vec_deinit(const vec self);
-optional vec_at(const vec self, const u32 index);
+optional vec_at(vec* self, const u32 index);
 void     vecMUT_reserve(vec* self, const u32 capacity);
 void     vecMUT_push(vec* self, const void* data);
 void     vecMUT_push_value(vec* self, const void* data);
@@ -88,6 +92,28 @@ void     vecMUT_push_assume_capacity(vec* self, const void* data);
 void     vecMUT_push_value_assume_capacity(vec* self, const void* data);
 optional vecMUT_pop(vec* self);
 void     vecMUT_remove_at(vec* self, const u32 index);
+
+// ----------------------------------------------
+// Graph
+
+typedef struct {
+	f64* data;
+	u32 number_of_nodes;
+} graph;
+typedef struct {
+	u32 from;
+	u32 to;
+} graph_edge;
+
+graph graph_init(u32 number_of_nodes);
+void  graph_deinit(const graph self);
+f64*  graph_at(graph* graph, u32 from, u32 to);
+void  graphMUT_add_edge(graph* self, u32 from, u32 to, optional weight);
+void  graphMUT_add_bidirectional_edge(graph* self, u32 from, u32 to, optional weight);
+u32   graph_get_degree(const graph self, u32 node);
+graph graph_transpose(graph* self);
+graph graph_get_bidirectional(graph* self);
+vec   graph_get_edges(graph* self);
 
 // ----------------------------------------------
 // Logging

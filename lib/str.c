@@ -17,7 +17,7 @@ str str_init(const char* data) {
 	u32 capacity = max(COMET_LIB_STR_INITIAL_CAPACITY, length);
 	char* m_data = malloc(capacity * sizeof(char));
 	if (m_data == NULL) {
-		errr("Failed to alloacte memory");
+		errr("Failed to allocate memory");
 	}
 	u32 i = 0;
 	for (; i < length; i++) {
@@ -31,7 +31,7 @@ str str_init(const char* data) {
 str str_init_reserve(const u32 capacity) {
 	char* m_data = malloc(capacity * sizeof(char));
 	if (m_data == NULL) {
-		errr("Failed to alloacte memory");
+		errr("Failed to allocate memory");
 	}
 
 	return (str) { m_data, 0, capacity };
@@ -46,7 +46,7 @@ str str_concat(const str str1, const str str2) {
 	u32 new_capacity = str1.capacity + str2.capacity;
 	char* new_data = malloc(new_capacity * sizeof(char));
 	if (new_data == NULL) {
-		errr("Failed to alloacte memory");
+		errr("Failed to allocate memory");
 	}
 	u32 i = 0;
 	for (; i < new_len; i++) {
@@ -66,7 +66,7 @@ str str_concat_cstr(const str str1, const char* str2) {
 	u32 new_capacity = str1.capacity + str2_length;
 	char* new_data = malloc(new_capacity * sizeof(char));
 	if (new_data == NULL) {
-		errr("Failed to alloacte memory");
+		errr("Failed to allocate memory");
 	}
 	u32 i = 0;
 	for (; i < new_len; i++) {
@@ -100,7 +100,7 @@ optional str_find(const str self, const char character) {
 void strMUT_reserve(str *self, const u32 capacity) {
 	self->data = realloc(self->data, capacity * sizeof(char));
 	if (self->data == NULL) {
-		errr("Failed to alloacte memory");
+		errr("Failed to allocate memory");
 	}
 	self->capacity = capacity;
 }
