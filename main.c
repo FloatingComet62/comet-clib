@@ -5,18 +5,22 @@
 #else
 
 int main() {
-  str s = str_init("Hello ");
-  str s1 = str_init("World");
-  strMUT_concat(&s, s1);
-  info(s.data);
-  str_deinit(s);
+  graph g = graph_init(7);
 
-  // graph g = graph_init(4);
-  // int weight = 1.0;
-  // graphMUT_add_bidirectional_edge(&g, 0, 1, optional_init_some(&weight));
-  // graphMUT_add_edge(&g, 1, 2, optional_init_some(&weight));
-  // printf("Degree of node 1: %d\n", graph_get_degree(g, 1));
-  // graph_deinit(g);
+  graphMUT_add_edge(&g, 0, 1);
+  graphMUT_add_edge(&g, 0, 2);
+  graphMUT_add_edge(&g, 1, 3);
+  graphMUT_add_edge(&g, 2, 4);
+  graphMUT_add_edge(&g, 1, 5);
+  graphMUT_add_edge(&g, 2, 6);
+
+  vec nodes = graph_breadth_first_search(&g, 0);
+  for (int i = 0; i < nodes.length; i++) {
+    printf("%d\n", *(u32*)vec_at_assume(&nodes, i));
+  }
+
+  vec_deinit(nodes);
+  graph_deinit(g);
 
   return 0;
 }

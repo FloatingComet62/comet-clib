@@ -1,9 +1,11 @@
 #include "../lib.h"
 
-u32 increase_capacity(const u32 old_capacity) { return old_capacity * 2; }
+u32 increase_capacity(const u32 old_capacity) {
+  return old_capacity + max(old_capacity, COMET_LIB_VEC_MAX_INCREMENT);
+}
 
 vec vec_init(const u32 stride) {
-  void* data = malloc(COMET_LIB_VEC_INITIAL_CAPACITY * stride);
+  void* data = calloc(COMET_LIB_VEC_INITIAL_CAPACITY, stride);
   if (data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -11,7 +13,7 @@ vec vec_init(const u32 stride) {
 }
 
 vec vec_init_reserve(const u32 stride, const u32 capacity) {
-  void* data = malloc(capacity * stride);
+  void* data = calloc(capacity, stride);
   if (data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -25,6 +27,9 @@ optional vec_at(vec* self, const u32 index) {
     return optional_init_none();
   }
   return optional_init_some((char*)self->head + index * self->stride);
+}
+void* vec_at_assume(vec* self, const u32 index) {
+  return (char*)self->head + index * self->stride;
 }
 
 void vecMUT_reserve(vec* self, const u32 capacity) {

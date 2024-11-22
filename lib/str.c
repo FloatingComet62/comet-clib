@@ -1,6 +1,8 @@
 #include "../lib.h"
 
-u32 increase_capcacity(const u32 old_capacity) { return old_capacity * 2; }
+u32 increase_capcacity(const u32 old_capacity) {
+  return old_capacity + max(old_capacity, COMET_LIB_STR_MAX_INCREMENT);
+}
 
 u32 cstr_len(const char* data) {
   u32 length = 0;
@@ -13,7 +15,7 @@ u32 cstr_len(const char* data) {
 str str_init(const char* data) {
   u32 length = cstr_len(data);
   u32 capacity = max(COMET_LIB_STR_INITIAL_CAPACITY, length);
-  char* m_data = malloc(capacity * sizeof(char));
+  char* m_data = calloc(capacity, sizeof(char));
   if (m_data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -27,7 +29,7 @@ str str_init(const char* data) {
 }
 
 str str_init_reserve(const u32 capacity) {
-  char* m_data = malloc(capacity * sizeof(char));
+  char* m_data = calloc(capacity, sizeof(char));
   if (m_data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -60,7 +62,7 @@ str str_concat_cstr(const str str1, const char* str2) {
   u32 str2_length = cstr_len(str2);
   u32 new_len = str1.length + str2_length;
   u32 new_capacity = str1.capacity + str2_length;
-  char* new_data = malloc(new_capacity * sizeof(char));
+  char* new_data = calloc(new_capacity, sizeof(char));
   if (new_data == NULL) {
     errr("Failed to allocate memory");
   }
