@@ -35,10 +35,10 @@ void graphMUT_add_bidirectional_edge_weighted(graph* self, u32 node1, u32 node2,
   *graph_at(self, node2, node1) = weight;
 }
 
-u32 graph_get_degree(const graph self, u32 node) {
-  f64* nodeData = self.data + node * self.number_of_nodes;
+u32 graph_get_degree(graph* self, u32 node) {
+  f64* nodeData = self->data + node * self->number_of_nodes;
   u32 degree = 0;
-  for (u32 i = 0; i < self.number_of_nodes; i++) {
+  for (u32 i = 0; i < self->number_of_nodes; i++) {
     if (nodeData[i] > 0.0) {
       degree++;
     }

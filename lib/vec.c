@@ -1,6 +1,6 @@
 #include "../lib.h"
 
-u32 increase_capacity(const u32 old_capacity) {
+u32 vec_increase_capacity(const u32 old_capacity) {
   return old_capacity + max(old_capacity, COMET_LIB_VEC_MAX_INCREMENT);
 }
 
@@ -32,6 +32,19 @@ void* vec_at_assume(vec* self, const u32 index) {
   return (char*)self->head + index * self->stride;
 }
 
+void vecMUT_swap(vec* self, const u32 index1, const u32 index2) {
+  if (index1 >= self->length || index2 >= self->length) {
+    // fuck you
+    return;
+  }
+  void* temp = malloc(self->stride);
+  memcpy(temp, vec_at_assume(self, index1), self->stride);
+  memcpy(vec_at_assume(self, index1), vec_at_assume(self, index2),
+         self->stride);
+  memcpy(vec_at_assume(self, index2), temp, self->stride);
+  free(temp);
+}
+
 void vecMUT_reserve(vec* self, const u32 capacity) {
   self->head = realloc(self->head, capacity * self->stride);
   if (self->head == NULL) {
@@ -42,14 +55,14 @@ void vecMUT_reserve(vec* self, const u32 capacity) {
 
 void vecMUT_push(vec* self, const void* data) {
   if (self->length + 1 > self->capacity) {
-    vecMUT_reserve(self, increase_capacity(self->capacity));
+    vecMUT_reserve(self, vec_increase_capacity(self->capacity));
   }
   vecMUT_push_assume_capacity(self, data);
 }
 
 void vecMUT_push_value(vec* self, const void* data) {
   if (self->length + 1 > self->capacity) {
-    vecMUT_reserve(self, increase_capacity(self->capacity));
+    vecMUT_reserve(self, vec_increase_capacity(self->capacity));
   }
   vecMUT_push_value_assume_capacity(self, data);
 }

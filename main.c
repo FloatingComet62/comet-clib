@@ -1,27 +1,21 @@
 #include "lib.h"
 
-#ifdef COMET_LIB_TEST
-#include "test.h"
-#else
+#ifndef COMET_LIB_TEST
 
 int main() {
-  graph g = graph_init(7);
-
-  graphMUT_add_edge(&g, 0, 1);
-  graphMUT_add_edge(&g, 0, 2);
-  graphMUT_add_edge(&g, 1, 3);
-  graphMUT_add_edge(&g, 2, 4);
-  graphMUT_add_edge(&g, 1, 5);
-  graphMUT_add_edge(&g, 2, 6);
-
-  vec nodes = graph_breadth_first_search(&g, 0);
-  for (int i = 0; i < nodes.length; i++) {
-    printf("%d\n", *(u32*)vec_at_assume(&nodes, i));
+  hashmap map = hashmap_init(sizeof(u32));
+  u32 value = 42;
+  str key = str_init("key");
+  hashmapMUT_set(&map, &key, &value);
+  optional entry = hashmap_get(&map, &key);
+  if (entry.has_data) {
+    printf("Value: %d\n", *(u32*)((hashmap_entry*)entry.data)->value);
+  } else {
+    printf("FUCK");
   }
 
-  vec_deinit(nodes);
-  graph_deinit(g);
-
+  str_deinit(key);
+  hashmap_deinit(map);
   return 0;
 }
 
