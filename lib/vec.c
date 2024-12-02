@@ -93,3 +93,18 @@ void vecMUT_remove_at(vec* self, const u32 index) {
          (self->length - index) * self->stride);
   self->length--;
 }
+
+void vec_serialize(vec* self, FILE* file) {
+  fwrite(&self->length, sizeof(u32), 1, file);
+  fwrite(&self->capacity, sizeof(u32), 1, file);
+  fwrite(&self->stride, sizeof(u32), 1, file);
+  fwrite(self->head, self->stride, self->length, file);
+}
+
+void vec_deserialize(vec* self, FILE* file) {
+  fread(&self->length, sizeof(u32), 1, file);
+  fread(&self->capacity, sizeof(u32), 1, file);
+  fread(&self->stride, sizeof(u32), 1, file);
+  vecMUT_reserve(self, self->capacity);
+  fread(self->head, self->stride, self->length, file);
+}

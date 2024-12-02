@@ -156,3 +156,16 @@ void strMUT_concat_cstr_assume_capacity(str* str1, const char* str2) {
   }
   str1->data[i] = '\0';
 }
+
+void str_serialize(str* self, FILE* file) {
+  fwrite(&self->length, sizeof(u32), 1, file);
+  fwrite(&self->capacity, sizeof(u32), 1, file);
+  fwrite(self->data, sizeof(char), self->length, file);
+}
+
+void str_deserialize(str* self, FILE* file) {
+  fread(&self->length, sizeof(u32), 1, file);
+  fread(&self->capacity, sizeof(u32), 1, file);
+  strMUT_reserve(self, self->capacity);
+  fread(self->data, sizeof(char), self->length, file);
+}

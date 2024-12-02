@@ -42,6 +42,23 @@ typedef double f64;
 #define clamp(num, min, max) min(max(num, min), max)
 
 // ----------------------------------------------
+// Memory Lens
+// Something which helps me track down memory leaks
+
+void* lens_malloc(size_t size, const char* file, const u32 line_number);
+void* lens_calloc(size_t count, size_t size, const char* file,
+                  const u32 line_number);
+void lens_free(void* block, const char* file, const u32 line_number);
+void lens_clear_logs();
+void lens_highlight_leaks();
+
+#if COMET_LIB_DEBUG && !COMET_LIB_INTERNAL_MEMORY_LENS
+#define malloc(size) lens_malloc(size, __FILE__, __LINE__)
+#define calloc(count, size) lens_calloc(count, size, __FILE__, __LINE__)
+#define free(block) lens_free(block, __FILE__, __LINE__)
+#endif
+
+// ----------------------------------------------
 // Optional
 
 typedef struct {
@@ -79,6 +96,8 @@ void strMUT_concat_cstr(str* str1, const char* str2);
 void strMUT_remove_at(str* self, const u32 index);
 void strMUT_concat_assume_capacity(str* str1, str* str2);
 void strMUT_concat_cstr_assume_capacity(str* str1, const char* str2);
+void str_serialize(str* self, FILE* file);
+void str_deserialize(str* self, FILE* file);
 
 // ----------------------------------------------
 // Vec
@@ -106,6 +125,8 @@ void vecMUT_push_value_assume_capacity(vec* self, const void* data);
 // expecting the user to handle freeing
 optional vecMUT_pop(vec* self);
 void vecMUT_remove_at(vec* self, const u32 index);
+void vec_serialize(vec* self, FILE* file);
+void vec_deserialize(vec* self, FILE* file);
 
 // ----------------------------------------------
 // Graph
@@ -136,6 +157,8 @@ vec graph_get_edges(graph* self);
 vec graph_depth_first_search(graph* self, u32 source_node);
 // vec<u32>
 vec graph_breadth_first_search(graph* self, u32 source_node);
+void graph_serialize(graph* self, FILE* file);
+void graph_deserialize(graph* self, FILE* file);
 
 // ----------------------------------------------
 // Hashmap
@@ -168,6 +191,9 @@ void hashmapMUT_clear(hashmap* self);
 vec hashmap_keys(hashmap* self);
 // vec<void*>
 vec hashmap_values(hashmap* self);
+
+void hashmap_serialize(hashmap* self, FILE* file);
+void hashmap_deserialize(hashmap* self, FILE* file);
 
 // ----------------------------------------------
 // Logging

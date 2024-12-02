@@ -155,3 +155,20 @@ vec graph_breadth_first_search(graph* self, u32 source_node) {
   vec_deinit(visited);
   return output;
 }
+
+void graph_serialize(graph* self, FILE* file) {
+  fwrite(&self->number_of_nodes, sizeof(u32), 1, file);
+  fwrite(self->data, sizeof(f64), self->number_of_nodes * self->number_of_nodes,
+         file);
+}
+
+void graph_deserialize(graph* self, FILE* file) {
+  fread(&self->number_of_nodes, sizeof(u32), 1, file);
+  self->data = realloc(
+      self->data, self->number_of_nodes * self->number_of_nodes * sizeof(f64));
+  if (self->data == NULL) {
+    errr("Failed to allocate memory");
+  }
+  fread(self->data, sizeof(f64), self->number_of_nodes * self->number_of_nodes,
+        file);
+}

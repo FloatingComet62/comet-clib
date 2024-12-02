@@ -25,9 +25,10 @@ hashmap hashmap_init_reserve(const u32 value_stride, const u32 capacity) {
 void hashmap_deinit(const hashmap self) {
   for (u32 i = 0; i < self.length; i++) {
     str_deinit(self.entries[i].key);
-    if (self.entries[i].value != NULL) {
-      free(self.entries[i].value);
+    if (self.entries[i].value == NULL) {
+      continue;
     }
+    free(self.entries[i].value);
   }
   free(self.entries);
 }
@@ -127,4 +128,34 @@ vec hashmap_values(hashmap* self) {
     vecMUT_push_value(&values, &self->entries[i].value);
   }
   return values;
+}
+
+void hashmap_serialize(hashmap* self, FILE* file) {
+  fwrite(&self->length, sizeof(u32), 1, file);
+  fwrite(&self->capacity, sizeof(u32), 1, file);
+  fwrite(&self->value_stride, sizeof(u32), 1, file);
+  for (u32 i = 0; i < self->length; i++) {
+    str_serialize(&self->entries[i].key, file);
+    fwrite(self->entries[i].value, self->value_stride, 1, file);
+  }
+}
+
+void hashmap_deserialize(hashmap* self, FILE* file) {
+  fread(&self->length, sizeof(u32), 1, file);
+  fread(&self->capacity, sizeof(u32), 1, file);
+  fread(&self->value_stride, sizeof(u32), 1, file);
+  hashmapMUT_reserve(self, self->capacity);
+  for (u32 i = 0; i < self->length; i++) {
+    str key = str_init("");
+    void* value = malloc(self->value_stride);
+    if (value == NULL) {
+      errr("Failed to allocate memory");
+    }
+
+    str_deserialize(&key, file);
+    fread(value, self->value_stride, 1, file);
+
+    self->entries[self->length].key = key;
+    self->entries[self->length].value = value;
+  }
 }
