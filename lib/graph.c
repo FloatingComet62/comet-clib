@@ -1,7 +1,8 @@
 #include "../lib.h"
 
 graph graph_init(u32 number_of_nodes) {
-  f64* data = calloc(number_of_nodes * number_of_nodes, sizeof(f64));
+  f64* data = calloc("graph initialization", number_of_nodes * number_of_nodes,
+                     sizeof(f64));
   if (data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -11,7 +12,9 @@ graph graph_init(u32 number_of_nodes) {
   return (graph){data, number_of_nodes};
 }
 
-void graph_deinit(const graph self) { free(self.data); }
+void graph_deinit(const graph self) {
+  free("graph deinitialization", self.data);
+}
 
 f64* graph_at(graph* g, u32 from, u32 to) {
   return g->data + from * g->number_of_nodes + to;
@@ -164,8 +167,9 @@ void graph_serialize(graph* self, FILE* file) {
 
 void graph_deserialize(graph* self, FILE* file) {
   fread(&self->number_of_nodes, sizeof(u32), 1, file);
-  self->data = realloc(
-      self->data, self->number_of_nodes * self->number_of_nodes * sizeof(f64));
+  self->data =
+      realloc("graph deserialization", self->data,
+              self->number_of_nodes * self->number_of_nodes * sizeof(f64));
   if (self->data == NULL) {
     errr("Failed to allocate memory");
   }

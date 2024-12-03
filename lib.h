@@ -21,6 +21,14 @@
 #define COMET_LIB_HASHMAP_INITIAL_CAPACITY 4
 #define COMET_LIB_HASHMAP_MAX_INCREMENT 32
 
+#if COMET_LIB_DEBUG
+#define COMET_LIB_MEMORY_LOG "debug.log"
+#define COMET_LIB_LOG "debug.log"
+#else
+#define COMET_LIB_MEMORY_LOG "memory.log"
+#define COMET_LIB_LOG "log.log"
+#endif
+
 // ----------------------------------------------
 // improved the naming by a factor of 10^64
 
@@ -45,17 +53,34 @@ typedef double f64;
 // Memory Lens
 // Something which helps me track down memory leaks
 
-void* lens_malloc(size_t size, const char* file, const u32 line_number);
+void* lens_malloc(size_t size, const char* file, const u32 line_number,
+                  const char* description);
 void* lens_calloc(size_t count, size_t size, const char* file,
-                  const u32 line_number);
-void lens_free(void* block, const char* file, const u32 line_number);
+                  const u32 line_number, const char* description);
+void lens_free(void* block, const char* file, const u32 line_number,
+               const char* description);
+void* lens_realloc(void* block, size_t size, const char* file,
+                   const u32 line_number, const char* description);
 void lens_clear_logs();
-void lens_highlight_leaks();
 
-#if COMET_LIB_DEBUG && !COMET_LIB_INTERNAL_MEMORY_LENS
-#define malloc(size) lens_malloc(size, __FILE__, __LINE__)
-#define calloc(count, size) lens_calloc(count, size, __FILE__, __LINE__)
-#define free(block) lens_free(block, __FILE__, __LINE__)
+/// @return true if there are leaks
+bool lens_highlight_leaks();
+
+#if (COMET_LIB_DEBUG || COMET_LIB_FORCE_MEMORY_LOG) && \
+    !COMET_LIB_INTERNAL_MEMORY_LENS
+#define malloc(description, size) \
+  lens_malloc(size, __FILE__, __LINE__, description)
+#define calloc(description, count, size) \
+  lens_calloc(count, size, __FILE__, __LINE__, description)
+#define realloc(description, block, size) \
+  lens_realloc(block, size, __FILE__, __LINE__, description)
+#define free(description, block) \
+  lens_free(block, __FILE__, __LINE__, description)
+#else
+#define malloc(description, size) malloc(size)
+#define calloc(description, count, size) calloc(count, size)
+#define realloc(description, block, size) realloc(block, size)
+#define free(descriptiont, block) free(block)
 #endif
 
 // ----------------------------------------------

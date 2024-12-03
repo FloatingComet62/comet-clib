@@ -16,7 +16,7 @@ str str_init(const char* data) {
   str self;
   self.length = cstr_len(data);
   self.capacity = max(COMET_LIB_STR_INITIAL_CAPACITY, self.length);
-  self.data = calloc(self.capacity, sizeof(char));
+  self.data = calloc("string initialization", self.capacity, sizeof(char));
   if (self.data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -33,19 +33,21 @@ str str_init_reserve(const u32 capacity) {
   str self;
   self.capacity = capacity;
   self.length = 0;
-  self.data = calloc(capacity, sizeof(char));
+  self.data = calloc("string initialization with reserved size", capacity,
+                     sizeof(char));
   if (self.data == NULL) {
     errr("Failed to allocate memory");
   }
   return self;
 }
 
-void str_deinit(const str self) { free(self.data); }
+void str_deinit(const str self) { free("string deinitialization", self.data); }
 
 str str_concat(str* str1, str* str2) {
   u32 new_len = str1->length + str2->length;
   u32 new_capacity = str1->capacity + str2->capacity;
-  char* new_data = malloc(new_capacity * sizeof(char));
+  char* new_data = malloc("string initialization for concatenation",
+                          new_capacity * sizeof(char));
   if (new_data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -65,7 +67,8 @@ str str_concat_cstr(str* str1, const char* str2) {
   u32 str2_length = cstr_len(str2);
   u32 new_len = str1->length + str2_length;
   u32 new_capacity = str1->capacity + str2_length;
-  char* new_data = calloc(new_capacity, sizeof(char));
+  char* new_data = calloc("string initialization for concatenation with char*",
+                          new_capacity, sizeof(char));
   if (new_data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -111,7 +114,8 @@ bool str_eq(str* str1, str* str2) {
 }
 
 void strMUT_reserve(str* self, const u32 capacity) {
-  self->data = realloc(self->data, capacity * sizeof(char));
+  self->data =
+      realloc("string resize reservation", self->data, capacity * sizeof(char));
   if (self->data == NULL) {
     errr("Failed to allocate memory");
   }

@@ -5,7 +5,8 @@ u32 vec_increase_capacity(const u32 old_capacity) {
 }
 
 vec vec_init(const u32 stride) {
-  void* data = calloc(COMET_LIB_VEC_INITIAL_CAPACITY, stride);
+  void* data =
+      calloc("vector initialization", COMET_LIB_VEC_INITIAL_CAPACITY, stride);
   if (data == NULL) {
     errr("Failed to allocate memory");
   }
@@ -13,14 +14,15 @@ vec vec_init(const u32 stride) {
 }
 
 vec vec_init_reserve(const u32 stride, const u32 capacity) {
-  void* data = calloc(capacity, stride);
+  void* data =
+      calloc("vector initialization with reserved size", capacity, stride);
   if (data == NULL) {
     errr("Failed to allocate memory");
   }
   return (vec){data, stride, 0, capacity};
 }
 
-void vec_deinit(const vec self) { free(self.head); }
+void vec_deinit(const vec self) { free("vector deinitialization", self.head); }
 
 optional vec_at(vec* self, const u32 index) {
   if (index >= self->length) {
@@ -37,16 +39,18 @@ void vecMUT_swap(vec* self, const u32 index1, const u32 index2) {
     // fuck you
     return;
   }
-  void* temp = malloc(self->stride);
+  void* temp =
+      malloc("vector temporary swap variable initialization", self->stride);
   memcpy(temp, vec_at_assume(self, index1), self->stride);
   memcpy(vec_at_assume(self, index1), vec_at_assume(self, index2),
          self->stride);
   memcpy(vec_at_assume(self, index2), temp, self->stride);
-  free(temp);
+  free("vector temporary swap variable deinitialization", temp);
 }
 
 void vecMUT_reserve(vec* self, const u32 capacity) {
-  self->head = realloc(self->head, capacity * self->stride);
+  self->head =
+      realloc("vector resize reservation", self->head, capacity * self->stride);
   if (self->head == NULL) {
     errr("Failed to allocate memory");
   }
@@ -81,7 +85,7 @@ optional vecMUT_pop(vec* self) {
   if (self->length == 0) {
     return optional_init_none();
   }
-  void* item = malloc(self->stride);
+  void* item = malloc("vector element popping", self->stride);
   memcpy(item, (char*)self->head + self->length * self->stride, self->stride);
   self->length--;
   return optional_init_some(item);

@@ -9,7 +9,8 @@ hashmap hashmap_init(const u32 value_stride) {
   self.capacity = COMET_LIB_HASHMAP_INITIAL_CAPACITY;
   self.length = 0;
   self.value_stride = value_stride;
-  self.entries = malloc(self.capacity * sizeof(hashmap_entry));
+  self.entries =
+      malloc("hashmap initialization", self.capacity * sizeof(hashmap_entry));
   return self;
 }
 
@@ -18,7 +19,8 @@ hashmap hashmap_init_reserve(const u32 value_stride, const u32 capacity) {
   self.capacity = capacity;
   self.length = 0;
   self.value_stride = value_stride;
-  self.entries = malloc(self.capacity * sizeof(hashmap_entry));
+  self.entries = malloc("hashmap initialization with reserved size",
+                        self.capacity * sizeof(hashmap_entry));
   return self;
 }
 
@@ -28,9 +30,11 @@ void hashmap_deinit(const hashmap self) {
     if (self.entries[i].value == NULL) {
       continue;
     }
-    free(self.entries[i].value);
+    char description[100];
+    sprintf(description, "hashmap value %d deinitialization", i);
+    free(description, self.entries[i].value);
   }
-  free(self.entries);
+  free("hashmap entries deinitialization", self.entries);
 }
 
 optional hashmap_get(hashmap* self, str* key) {
@@ -43,7 +47,8 @@ optional hashmap_get(hashmap* self, str* key) {
 }
 
 void hashmapMUT_reserve(hashmap* self, const u32 capacity) {
-  self->entries = realloc(self->entries, capacity * sizeof(hashmap_entry));
+  self->entries = realloc("hashmap resize reservation", self->entries,
+                          capacity * sizeof(hashmap_entry));
   if (self->entries == NULL) {
     errr("Failed to allocate memory");
   }
@@ -70,17 +75,14 @@ void hashmapMUT_set_assume_capacity(hashmap* self, str* key, void* value) {
     hashmapMUT_set_assume_capacity_and_new_item(self, key, value);
     return;
   }
-  ((hashmap_entry*)entry.data)->value = malloc(self->value_stride);
-  if (((hashmap_entry*)entry.data)->value == NULL) {
-    errr("Failed to allocate memory");
-  }
   memcpy(((hashmap_entry*)entry.data)->value, value, self->value_stride);
 }
 
 void hashmapMUT_set_assume_capacity_and_new_item(hashmap* self, str* key,
                                                  void* value) {
   self->entries[self->length].key = str_init(key->data);
-  self->entries[self->length].value = malloc(self->value_stride);
+  self->entries[self->length].value =
+      malloc("hashmap value initialization", self->value_stride);
   if (self->entries[self->length].value == NULL) {
     errr("Failed to allocate memory");
   }
@@ -93,7 +95,8 @@ void hashmapMUT_remove(hashmap* self, str* key) {
     if (str_eq(&self->entries[i].key, key)) {
       str_deinit(self->entries[i].key);
       if (self->entries[i].value != NULL) {
-        free(self->entries[i].value);
+        free("hashmap value deinitialization via remove",
+             self->entries[i].value);
       }
       for (u32 j = i; j < self->length - 1; j++) {
         self->entries[j] = self->entries[j + 1];
@@ -108,7 +111,9 @@ void hashmapMUT_clear(hashmap* self) {
   for (u32 i = 0; i < self->length; i++) {
     str_deinit(self->entries[i].key);
     if (self->entries[i].value != NULL) {
-      free(self->entries[i].value);
+      char description[100];
+      sprintf(description, "hashmap value %d deinitialization via clear", i);
+      free(description, self->entries[i].value);
     }
   }
   self->length = 0;
@@ -147,7 +152,8 @@ void hashmap_deserialize(hashmap* self, FILE* file) {
   hashmapMUT_reserve(self, self->capacity);
   for (u32 i = 0; i < self->length; i++) {
     str key = str_init("");
-    void* value = malloc(self->value_stride);
+    void* value = malloc("hashmap value initialization via deserialization",
+                         self->value_stride);
     if (value == NULL) {
       errr("Failed to allocate memory");
     }
@@ -155,7 +161,7 @@ void hashmap_deserialize(hashmap* self, FILE* file) {
     str_deserialize(&key, file);
     fread(value, self->value_stride, 1, file);
 
-    self->entries[self->length].key = key;
-    self->entries[self->length].value = value;
+    self->entries[i].key = key;
+    self->entries[i].value = value;
   }
 }
