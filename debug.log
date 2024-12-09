@@ -1,13 +1,5 @@
-+0000014E27FED4E0 malloc 96 lib/hashmap.c:13 hashmap initialization
-=0000014E27FED4E0->0000014E27FED4E0 realloc 96 lib/hashmap.c:50 hashmap resize reservation
-+0000014E27FF3E90 calloc 4x1 lib/str.c:19 string initialization
-+0000014E27FF3EB0 malloc 4 lib/hashmap.c:155 hashmap value initialization via deserialization
-=0000014E27FF3E90->0000014E27FF3E90 realloc 4 lib/str.c:118 string resize reservation
-+0000014E27FF3ED0 calloc 4x1 lib/str.c:19 string initialization
--0000014E27FF3ED0 freed lib/str.c:44 string deinitialization
--0000014E27FF3E90 freed lib/str.c:44 string deinitialization
--0000014E27FF3EB0 freed lib/hashmap.c:35 hashmap value 0 deinitialization
--0000014E27FED4E0 freed lib/hashmap.c:37 hashmap entries deinitialization
-+0000014E27FF12C0 calloc 4x17 lib/vec.c:9 vector initialization
--0000014E27FF12C0 freed lib/vec.c:25 vector deinitialization
++0000020CE4444FD0 malloc 15360 main.c:12 arr shit
+-0000020CE4444FD0 freed main.c:13 arr bye bye
++0000020CE4441890 calloc 4x17 lib/vec.c:9 vector initialization
+-0000020CE4441890 freed lib/vec.c:25 vector deinitialization
 No leaks

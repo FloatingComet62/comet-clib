@@ -68,7 +68,7 @@ bool lens_highlight_leaks() {
   }
   fprintf(file, "\nLeaked %d pointers\n", addresses.length);
   for (int i = 0; i < addresses.length; i++) {
-    fprintf(file, "%s\n", vec_at_assume(&addresses, i));
+    fprintf(file, "%s\n", (char*)vec_at_assume(&addresses, i));
   }
   fprintf(file, "\n");
 
@@ -81,8 +81,8 @@ void* lens_malloc(size_t size, const char* source_file, const u32 line_number,
                   const char* description) {
   void* ptr = malloc("lens malloc", size);
   FILE* file = fopen(COMET_LIB_MEMORY_LOG, "a");
-  fprintf(file, "+%p malloc %d %s:%d %s\n", ptr, size, source_file, line_number,
-          description);
+  fprintf(file, "+%p malloc %zu %s:%d %s\n", ptr, size, source_file,
+          line_number, description);
   fclose(file);
   return ptr;
 }
@@ -90,7 +90,7 @@ void* lens_calloc(size_t count, size_t size, const char* source_file,
                   const u32 line_number, const char* description) {
   void* ptr = calloc("lens calloc", count, size);
   FILE* file = fopen(COMET_LIB_MEMORY_LOG, "a");
-  fprintf(file, "+%p calloc %dx%d %s:%d %s\n", ptr, count, size, source_file,
+  fprintf(file, "+%p calloc %zux%zu %s:%d %s\n", ptr, count, size, source_file,
           line_number, description);
   fclose(file);
   return ptr;
@@ -111,7 +111,7 @@ void* lens_realloc(void* block, size_t size, const char* source_file,
                    const u32 line_number, const char* description) {
   FILE* file = fopen(COMET_LIB_MEMORY_LOG, "a");
   void* ptr = realloc("lens realloc", block, size);
-  fprintf(file, "=%p->%p realloc %d %s:%d %s\n", block, ptr, size, source_file,
+  fprintf(file, "=%p->%p realloc %zu %s:%d %s\n", block, ptr, size, source_file,
           line_number, description);
   fclose(file);
   return ptr;
